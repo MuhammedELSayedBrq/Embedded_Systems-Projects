@@ -1,5 +1,5 @@
 # Embedded_Systems-Projects
-A collaborative repo with Mo_abdelbaset, Mo_farouk, Yaya and Gemy for the tasks in Embedded C Course
+<h2>A collaborative repo with Mo_abdelbaset, Mo_farouk, Yaya and Gemy for the tasks in Embedded C Course</h2>
 <h3>This is the code for project **Digital Clock</h3>
 <h3>Desinged for 8051 microcontroller</h3>
 <h3>Design Layers</h3>
