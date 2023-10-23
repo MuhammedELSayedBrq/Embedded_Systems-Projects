@@ -5,5 +5,5 @@
 <h3>Design Layers</h3>
 <img alt="MCAL, HAL & Application Layers in consideration" src="https://www.beningo.com/wp-content/uploads/2016/04/API-HAL-Layers.jpg" />
 <h3>Proteus Schematic</h3>
-<img alt="MCAL, HAL & Application Layers in consideration" src="[https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing](https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing)https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing" />
+<img alt="Microcontroller 89C52 with 4 buttons, 7-segment for digital clock" src="[https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing](https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing)https://drive.google.com/file/d/1w_qc8rUmm-ufIKKl0MkaSDIKy6gOnkr5/view?usp=sharing" />
 <h3>Thanks!</h3>
