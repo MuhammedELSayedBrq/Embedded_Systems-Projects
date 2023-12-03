@@ -1,0 +1,9 @@
+".\Objects\DELAY.obj",
+".\Objects\SEG_PRG.obj",
+".\Objects\DIO_PRG.obj",
+".\Objects\DIO_PRG.obj",
+".\Objects\interrupt.obj",
+".\Objects\main.obj",
+".\Objects\timer.obj" 
+TO ".\Objects\slave" 
+PRINT(".\Listings\slave.m51")

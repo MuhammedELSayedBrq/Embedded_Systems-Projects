@@ -1,0 +1,57 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: mohamed DELL, university, LIC=----
+ 
+Tool Versions:
+Toolchain:       PK51 Prof. Develpers Kit  Version: 9.60.7.0
+Toolchain Path:  C:\Keil_v5\C51\BIN
+C Compiler:      C51.exe V9.60.7.0
+Assembler:       A51.exe V8.2.7.0
+Linker/Locator:  BL51.exe V6.22.4.0
+Library Manager: LIB51.exe V4.30.1.0
+Hex Converter:   OH51.exe V2.7.0.0
+CPU DLL:         S8051.DLL V3.125.1.0
+Dialog DLL:      DP51.DLL V2.69.0.0 
+<h2>Project:</h2>
+D:\Electrical\4th\1st_term\New folder\traffic_light\traffic_light.uvproj
+Project File Date:  12/03/2023
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+compiling SEG_PRG.c...
+HAL\SEG_PRG.c(52): warning C316: unterminated conditionals
+compiling DELAY.c...
+compiling DIO_PRG.c...
+compiling main.c...
+main.c(206): warning C316: unterminated conditionals
+main.c(38): warning C294: unreachable code
+compiling interrupt.c...
+compiling timer.c...
+MCAL\timer.c(93): warning C316: unterminated conditionals
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEG_COUNTUP?SEG_PRG
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SEG_COUNTDOWN?SEG_PRG
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DIO_GETPINVALUE?DIO_PRG
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TIMER2_INIT?TIMER
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TIMER2_START?TIMER
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TIMER2_STOP?TIMER
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_SECOND_TIMER1?TIMER
+Program Size: data=44.0 xdata=0 code=1789
+creating hex file from ".\Objects\traffic_light"...
+".\Objects\traffic_light" - 0 Error(s), 11 Warning(s).
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

@@ -1,0 +1,63 @@
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         12/03/2023 11:06:02 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE INTERRUPT
+OBJECT MODULE PLACED IN .\Objects\interrupt.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE MCAL\interrupt.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Lis
+                    -tings\interrupt.lst) TABS(2) OBJECT(.\Objects\interrupt.obj)
+
+line level    source
+
+   1          #include "MCAL/interrupt.h"
+   2          #include "MCAL/DIO_REG.h"
+   3          
+   4          void interrupt_init() {
+   5   1      
+   6   1             EX0 = 1;
+   7   1             EX1 = 1;
+   8   1          // ET0 = 1;
+   9   1             ET1 = 1;
+  10   1          // ES = 1;
+  11   1             EA = 1;
+  12   1      }
+  13          
+  14          void enable_interrupts() {
+  15   1          EA = 1;
+  16   1      }
+  17          
+  18          void disable_interrupts() {
+  19   1          EA = 0;
+  20   1      }
+  21          void timer1_interrupt_init() {
+  22   1          TMOD |= 0x10; 
+  23   1          TH1 = 0x63;   
+  24   1          TL1 = 0xC0;
+  25   1          ET1 = 1;
+  26   1          EA  = 1;
+  27   1          TR1 = 1;
+  28   1      }
+  29          void timer2_interrupt_init() {
+  30   1        
+  31   1          T2CON  = 0x04;   
+  32   1          TH2    = 0x3C;
+  33   1          RCAP2H = 0x3C;   
+  34   1          TL2    = 0xB0;
+  35   1          RCAP2L = 0xB0;
+  36   1          ET2 = 1;
+  37   1          EA = 1;
+  38   1          TR2 = 1;
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     53    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

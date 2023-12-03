@@ -1,0 +1,547 @@
+; MCAL\DIO_PRG.SRC generated from: MCAL\DIO_PRG.c
+; COMPILER INVOKED BY:
+;        C:\Keil_v5\C51\BIN\C51.EXE MCAL\DIO_PRG.c OPTIMIZE(8,SPEED) BROWSE SRC DEBUG OBJECTEXTEND PRINT(.\Listings\DIO_PRG.lst) TABS(2) OBJECT(.\Objects\DIO_PRG.obj)
+
+$NOMOD51
+
+NAME	DIO_PRG
+
+PORT0_Register	DATA	080H
+PORT1_Register	DATA	090H
+PORT2_Register	DATA	0A0H
+PORT3_Register	DATA	0B0H
+?PR?_DIO_SetPinDirection?DIO_PRG         SEGMENT CODE 
+?PR?_DIO_SetPortDirection?DIO_PRG        SEGMENT CODE 
+?PR?_DIO_GetPinValue?DIO_PRG             SEGMENT CODE 
+?PR?_DIO_SetPortValue?DIO_PRG            SEGMENT CODE 
+	PUBLIC	_DIO_SetPortValue
+	PUBLIC	_DIO_GetPinValue
+	PUBLIC	_DIO_SetPortDirection
+	PUBLIC	_DIO_SetPinDirection
+; #include "LIB\STD_TYPES.h"
+; #include "LIB\BIT_MATH.h"
+; #include "MCAL\DIO_INT.h"
+; #include "MCAL\DIO_REG.h"
+; 
+; 
+; /* IO Pins */
+; void DIO_SetPinDirection (u8 u8PortIdCopy, u8 u8PinIdCopy, u8 u8PinDirCopy)
+
+	RSEG  ?PR?_DIO_SetPinDirection?DIO_PRG
+_DIO_SetPinDirection:
+	USING	0
+			; SOURCE LINE # 8
+;---- Variable 'u8PinIdCopy?041' assigned to Register 'R5' ----
+;---- Variable 'u8PortIdCopy?040' assigned to Register 'R7' ----
+;---- Variable 'u8PinDirCopy?042' assigned to Register 'R3' ----
+; {
+			; SOURCE LINE # 9
+; 	/* Make sure that the Port ID and Pin ID are in the valid range */
+; 	if ((u8PortIdCopy <= PORT3) && (u8PinIdCopy <= PIN7))
+			; SOURCE LINE # 11
+	MOV  	A,R7
+	SETB 	C
+	SUBB 	A,#03H
+	JC   	$ + 5H
+	LJMP 	?C0017
+	MOV  	A,R5
+	SUBB 	A,#07H
+	JC   	$ + 5H
+	LJMP 	?C0017
+; 	{
+			; SOURCE LINE # 12
+; 		if ( u8PinDirCopy == OUTPUT )
+			; SOURCE LINE # 13
+	MOV  	A,R3
+	XRL  	A,#01H
+	JNZ  	?C0002
+; 		{
+			; SOURCE LINE # 14
+; 			/* Check on the Required PORT Number */
+; 			switch (u8PortIdCopy)
+			; SOURCE LINE # 16
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0005
+	DEC  	A
+	JZ   	?C0006
+	DEC  	A
+	JZ   	?C0007
+	ADD  	A,#03H
+	JZ   	$ + 5H
+	LJMP 	?C0017
+; 			{
+			; SOURCE LINE # 17
+; 				case PORT0: SET_BIT(PORT0_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 18
+?C0004:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0049
+?C0048:
+	CLR  	C
+	RLC  	A
+?C0049:
+	DJNZ 	R0,?C0048
+	ORL  	PORT0_Register,A
+	RET  	
+; 				case PORT1: SET_BIT(PORT1_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 19
+?C0005:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0051
+?C0050:
+	CLR  	C
+	RLC  	A
+?C0051:
+	DJNZ 	R0,?C0050
+	ORL  	PORT1_Register,A
+	RET  	
+; 				case PORT2: SET_BIT(PORT2_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 20
+?C0006:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0053
+?C0052:
+	CLR  	C
+	RLC  	A
+?C0053:
+	DJNZ 	R0,?C0052
+	ORL  	PORT2_Register,A
+	RET  	
+; 				case PORT3: SET_BIT(PORT3_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 21
+?C0007:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0055
+?C0054:
+	CLR  	C
+	RLC  	A
+?C0055:
+	DJNZ 	R0,?C0054
+	ORL  	PORT3_Register,A
+	RET  	
+; 			}
+			; SOURCE LINE # 22
+; 		}
+			; SOURCE LINE # 23
+?C0002:
+; 
+; 		else if ( u8PinDirCopy == INPUT )
+			; SOURCE LINE # 25
+	MOV  	A,R3
+	JNZ  	?C0017
+; 		{
+			; SOURCE LINE # 26
+; 			/* Check on the Required PORT Number */
+; 			switch (u8PortIdCopy)
+			; SOURCE LINE # 28
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0012
+	DEC  	A
+	JZ   	?C0013
+	DEC  	A
+	JZ   	?C0014
+	ADD  	A,#03H
+	JNZ  	?C0017
+; 			{
+			; SOURCE LINE # 29
+; 				case PORT0: CLR_BIT(PORT0_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 30
+?C0011:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0057
+?C0056:
+	CLR  	C
+	RLC  	A
+?C0057:
+	DJNZ 	R0,?C0056
+	CPL  	A
+	ANL  	PORT0_Register,A
+	RET  	
+; 				case PORT1: CLR_BIT(PORT1_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 31
+?C0012:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0059
+?C0058:
+	CLR  	C
+	RLC  	A
+?C0059:
+	DJNZ 	R0,?C0058
+	CPL  	A
+	ANL  	PORT1_Register,A
+	RET  	
+; 				case PORT2: CLR_BIT(PORT2_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 32
+?C0013:
+	MOV  	R0,AR5
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0061
+?C0060:
+	CLR  	C
+	RLC  	A
+?C0061:
+	DJNZ 	R0,?C0060
+	CPL  	A
+	ANL  	PORT2_Register,A
+	RET  	
+; 				case PORT3: CLR_BIT(PORT3_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 33
+?C0014:
+	MOV  	R7,AR5
+	MOV  	R0,AR7
+	MOV  	A,#01H
+	INC  	R0
+	SJMP 	?C0063
+?C0062:
+	CLR  	C
+	RLC  	A
+?C0063:
+	DJNZ 	R0,?C0062
+	CPL  	A
+	ANL  	PORT3_Register,A
+; 			}
+			; SOURCE LINE # 34
+; 		}
+			; SOURCE LINE # 35
+; 
+; 		else
+; 		{
+			; SOURCE LINE # 38
+; 			/* Do nothing, Wrong Direction Required */
+; 		}
+			; SOURCE LINE # 40
+; 	}
+			; SOURCE LINE # 41
+; 
+; 	else
+; 	{
+			; SOURCE LINE # 44
+; 		/* Do nothing, Error in the Pin ID or PORT ID */
+; 	}
+			; SOURCE LINE # 46
+; }
+			; SOURCE LINE # 47
+?C0017:
+	RET  	
+; END OF _DIO_SetPinDirection
+
+; 
+; void DIO_SetPortDirection (u8 u8PortIdCopy, u8 u8PortDirCopy)
+
+	RSEG  ?PR?_DIO_SetPortDirection?DIO_PRG
+_DIO_SetPortDirection:
+			; SOURCE LINE # 49
+;---- Variable 'u8PortDirCopy?144' assigned to Register 'R5' ----
+;---- Variable 'u8PortIdCopy?143' assigned to Register 'R7' ----
+; {
+			; SOURCE LINE # 50
+; 	/* Make sure that the Port ID and Pin ID are in the valid range */
+; 		if ( u8PortDirCopy == OUTPUT )
+			; SOURCE LINE # 52
+	CJNE 	R5,#01H,?C0018
+; 		{
+			; SOURCE LINE # 53
+; 			/* Check on the Required PORT Number */
+; 			switch (u8PortIdCopy)
+			; SOURCE LINE # 55
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0021
+	DEC  	A
+	JZ   	?C0022
+	DEC  	A
+	JZ   	?C0023
+	ADD  	A,#03H
+	JNZ  	?C0032
+; 			{
+			; SOURCE LINE # 56
+; 				case PORT0: PORT0_Register = 0xff ; break;
+			; SOURCE LINE # 57
+?C0020:
+	MOV  	PORT0_Register,#0FFH
+	RET  	
+; 				case PORT1: PORT1_Register = 0xff ; break;
+			; SOURCE LINE # 58
+?C0021:
+	MOV  	PORT1_Register,#0FFH
+	RET  	
+; 				case PORT2: PORT2_Register = 0xff ; break;
+			; SOURCE LINE # 59
+?C0022:
+	MOV  	PORT2_Register,#0FFH
+	RET  	
+; 				case PORT3: PORT3_Register = 0xff ; break;
+			; SOURCE LINE # 60
+?C0023:
+	MOV  	PORT3_Register,#0FFH
+	RET  	
+; 			}
+			; SOURCE LINE # 61
+; 		}
+			; SOURCE LINE # 62
+?C0018:
+; 
+; 		else if ( u8PortDirCopy == INPUT )
+			; SOURCE LINE # 64
+	MOV  	A,R5
+	JNZ  	?C0032
+; 		{
+			; SOURCE LINE # 65
+; 			/* Check on the Required PORT Number */
+; 			switch (u8PortIdCopy)
+			; SOURCE LINE # 67
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0028
+	DEC  	A
+	JZ   	?C0029
+	DEC  	A
+	JZ   	?C0030
+	ADD  	A,#03H
+	JNZ  	?C0032
+; 			{
+			; SOURCE LINE # 68
+; 				case PORT0: PORT0_Register = 0x00 ; break;
+			; SOURCE LINE # 69
+?C0027:
+	CLR  	A
+	MOV  	PORT0_Register,A
+	RET  	
+; 				case PORT1: PORT1_Register = 0x00 ; break;
+			; SOURCE LINE # 70
+?C0028:
+	CLR  	A
+	MOV  	PORT1_Register,A
+	RET  	
+; 				case PORT2: PORT2_Register = 0x00 ; break;
+			; SOURCE LINE # 71
+?C0029:
+	CLR  	A
+	MOV  	PORT2_Register,A
+	RET  	
+; 				case PORT3: PORT3_Register = 0x00 ; break;
+			; SOURCE LINE # 72
+?C0030:
+	CLR  	A
+	MOV  	PORT3_Register,A
+; 			}
+			; SOURCE LINE # 73
+; 		}
+			; SOURCE LINE # 74
+; 
+; 	else
+; 	{
+			; SOURCE LINE # 77
+; 		/* Do nothing, Error in  PORT ID */
+; 	}
+			; SOURCE LINE # 79
+; }
+			; SOURCE LINE # 80
+?C0032:
+	RET  	
+; END OF _DIO_SetPortDirection
+
+; 
+; u8 DIO_GetPinValue(u8 u8PortIdCopy, u8 u8PinIdCopy)
+
+	RSEG  ?PR?_DIO_GetPinValue?DIO_PRG
+_DIO_GetPinValue:
+	USING	0
+			; SOURCE LINE # 82
+;---- Variable 'u8ResultLocal?247' assigned to Register 'R6' ----
+;---- Variable 'u8PinIdCopy?246' assigned to Register 'R5' ----
+;---- Variable 'u8PortIdCopy?245' assigned to Register 'R7' ----
+; {
+			; SOURCE LINE # 83
+; 	/* Define Local Variable to get the BIT Value */
+; 	u8 u8ResultLocal;
+; 	/* Make sure that the Port ID and Pin ID are in the valid range */
+; 	if ((u8PortIdCopy <= PORT3) && (u8PinIdCopy <= PIN7))
+			; SOURCE LINE # 87
+	MOV  	A,R7
+	SETB 	C
+	SUBB 	A,#03H
+	JNC  	?C0033
+	MOV  	A,R5
+	SUBB 	A,#07H
+	JNC  	?C0033
+; 	{
+			; SOURCE LINE # 88
+; 		/* Check on the Required PORT Number */
+; 		switch (u8PortIdCopy)
+			; SOURCE LINE # 90
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0036
+	DEC  	A
+	JZ   	?C0037
+	DEC  	A
+	JZ   	?C0038
+	ADD  	A,#03H
+	JNZ  	?C0039
+; 		{
+			; SOURCE LINE # 91
+; 			case PORT0: u8ResultLocal= GET_BIT(PORT0_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 92
+?C0035:
+	MOV  	R0,AR5
+	MOV  	A,PORT0_Register
+	INC  	R0
+	SJMP 	?C0065
+?C0064:
+	CLR  	C
+	RRC  	A
+?C0065:
+	DJNZ 	R0,?C0064
+	SJMP 	?C0074
+; 			case PORT1: u8ResultLocal= GET_BIT(PORT1_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 93
+?C0036:
+	MOV  	R0,AR5
+	MOV  	A,PORT1_Register
+	INC  	R0
+	SJMP 	?C0067
+?C0066:
+	CLR  	C
+	RRC  	A
+?C0067:
+	DJNZ 	R0,?C0066
+?C0072:
+	SJMP 	?C0074
+; 			case PORT2: u8ResultLocal= GET_BIT(PORT2_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 94
+?C0037:
+	MOV  	R0,AR5
+	MOV  	A,PORT2_Register
+	INC  	R0
+	SJMP 	?C0069
+?C0068:
+	CLR  	C
+	RRC  	A
+?C0069:
+	DJNZ 	R0,?C0068
+?C0073:
+	SJMP 	?C0074
+; 			case PORT3: u8ResultLocal= GET_BIT(PORT3_Register,u8PinIdCopy); break;
+			; SOURCE LINE # 95
+?C0038:
+	MOV  	R7,AR5
+	MOV  	R0,AR7
+	MOV  	A,PORT3_Register
+	INC  	R0
+	SJMP 	?C0071
+?C0070:
+	CLR  	C
+	RRC  	A
+?C0071:
+	DJNZ 	R0,?C0070
+?C0074:
+	ANL  	A,#01H
+	MOV  	R6,A
+	SJMP 	?C0039
+; 		}
+			; SOURCE LINE # 96
+; 	}
+			; SOURCE LINE # 97
+?C0033:
+; 	else
+; 	{
+			; SOURCE LINE # 99
+; 		/* return 0xff in case of error in the Pin ID or PORT ID */
+; 		u8ResultLocal = 0xFF;
+			; SOURCE LINE # 101
+	MOV  	R6,#0FFH
+; 	}
+			; SOURCE LINE # 102
+?C0039:
+; 	return u8ResultLocal;
+			; SOURCE LINE # 103
+	MOV  	R7,AR6
+; }
+			; SOURCE LINE # 104
+	RET  	
+; END OF _DIO_GetPinValue
+
+; void DIO_SetPortValue(u8 u8PortIdCopy,  u8 A_u8PortVal)
+
+	RSEG  ?PR?_DIO_SetPortValue?DIO_PRG
+_DIO_SetPortValue:
+			; SOURCE LINE # 105
+;---- Variable 'A_u8PortVal?349' assigned to Register 'R5' ----
+;---- Variable 'u8PortIdCopy?348' assigned to Register 'R7' ----
+; {
+			; SOURCE LINE # 106
+; 	if(u8PortIdCopy <= PORT3)
+			; SOURCE LINE # 107
+	MOV  	A,R7
+	SETB 	C
+	SUBB 	A,#03H
+	JNC  	?C0047
+; 	{
+			; SOURCE LINE # 108
+; 		switch(u8PortIdCopy)
+			; SOURCE LINE # 109
+	MOV  	A,R7
+	DEC  	A
+	JZ   	?C0044
+	DEC  	A
+	JZ   	?C0045
+	DEC  	A
+	JZ   	?C0046
+	ADD  	A,#03H
+	JNZ  	?C0047
+; 		{
+			; SOURCE LINE # 110
+; 			case PORT0:
+			; SOURCE LINE # 111
+?C0043:
+; 				PORT0_Register= A_u8PortVal; break;
+			; SOURCE LINE # 112
+	MOV  	PORT0_Register,R5
+	RET  	
+; 			case PORT1:
+			; SOURCE LINE # 113
+?C0044:
+; 				PORT1_Register= A_u8PortVal; break;
+			; SOURCE LINE # 114
+	MOV  	PORT1_Register,R5
+	RET  	
+; 			case PORT2:
+			; SOURCE LINE # 115
+?C0045:
+; 				PORT2_Register= A_u8PortVal; break;
+			; SOURCE LINE # 116
+	MOV  	PORT2_Register,R5
+	RET  	
+; 			case PORT3:
+			; SOURCE LINE # 117
+?C0046:
+; 				PORT3_Register= A_u8PortVal; break;
+			; SOURCE LINE # 118
+	MOV  	PORT3_Register,R5
+; 		}
+			; SOURCE LINE # 119
+; 	}
+			; SOURCE LINE # 120
+; }
+			; SOURCE LINE # 121
+?C0047:
+	RET  	
+; END OF _DIO_SetPortValue
+
+	END

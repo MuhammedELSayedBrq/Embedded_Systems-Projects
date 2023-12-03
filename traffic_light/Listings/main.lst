@@ -1,0 +1,238 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              12/03/2023 11:06:02 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "LIB/BIT_MATH.h"
+   2          #include "LIB/STD_TYPES.h"
+   3          #include "MCAL/DIO_INT.h"
+   4          #include "MCAL/DIO_REG.h"
+   5          #include "HAL/SEG_INT.h"
+   6          #include "MCAL/interrupt.h"
+   7          #include "MCAL/timer.h"
+   8          
+   9          #define RED_DURATION 100
+  10          #define RED_AND_AMBER_DURATION 100
+  11          #define GREEN_DURATION 100
+  12          #define AMBER_DURATION 100
+  13          
+  14          #define one_second   23  //for timer 1 
+  15          
+  16          typedef enum {RED, RED_AND_AMBER, GREEN, AMBER} Light_State;
+  17          
+  18          
+  19          void initizalition();
+  20          void send_interrupt();
+  21          Light_State Current_State;
+  22          u16 Time_in_state;
+  23          
+  24          //sev seg flags
+  25          u16 seg_flag;
+  26          u16 segg_num;
+  27          u8 seg_state;
+  28          
+  29          //flag to turn system on/off
+  30          boolean turn_on;  
+  31          
+  32          int main(void){
+  33   1        
+  34   1        initizalition();
+  35   1        while(1){
+  36   2          
+  37   2        }
+  38   1      return 0;
+  39   1      }
+  40          void initizalition(){
+  41   1        DIO_SetPinDirection(PORT2,PIN0,INPUT);
+  42   1        DIO_SetPinDirection(PORT2,PIN1,OUTPUT);
+  43   1        DIO_SetPinDirection(PORT2,PIN2,OUTPUT);
+  44   1        DIO_SetPinDirection(PORT2,PIN3,OUTPUT);  //INTR pin
+  45   1        timer2_interrupt_init();                 //init for timer2 INTR
+  46   1        timer1_interrupt_init();                 //init for timer1 INTR 
+  47   1        interrupt_init();                        //init for EX0,EX1 INTR
+  48   1        Current_State = RED;                     //initial state 
+  49   1        turn_on = TRUE;                          //system on
+  50   1        SEG_Init(PORT1);
+  51   1        Time_in_state = 0;
+  52   1        segg_num = 3;
+  53   1        SEG_DisplayNumber(PORT1,segg_num);
+  54   1        seg_state = 0;
+C51 COMPILER V9.60.7.0   MAIN                                                              12/03/2023 11:06:02 PAGE 2   
+
+  55   1        seg_flag = 0;
+  56   1      }
+  57          void timer2_isr() interrupt 5 { 
+  58   1        TF2 = 0;
+  59   1        DIO_SetPinDirection(PORT2,PIN3,OUTPUT);
+  60   1        if(turn_on == TRUE){
+  61   2        switch(Current_State){
+  62   3          case RED:
+  63   3          {
+  64   4            DIO_SetPinDirection(PORT2,PIN0,INPUT);
+  65   4            DIO_SetPinDirection(PORT2,PIN1,OUTPUT);
+  66   4            DIO_SetPinDirection(PORT2,PIN2,OUTPUT);
+  67   4            if (++Time_in_state == RED_DURATION)
+  68   4              {
+  69   5                Time_in_state = 0;
+  70   5                send_interrupt();
+  71   5                Current_State = RED_AND_AMBER;
+  72   5              }
+  73   4          break;
+  74   4          }
+  75   3          case RED_AND_AMBER:
+  76   3          {
+  77   4            DIO_SetPinDirection(PORT2,PIN0,INPUT);
+  78   4            DIO_SetPinDirection(PORT2,PIN1,INPUT);
+  79   4            DIO_SetPinDirection(PORT2,PIN2,OUTPUT);
+  80   4            if (++Time_in_state == RED_AND_AMBER_DURATION)
+  81   4              {
+  82   5                Current_State = GREEN;
+  83   5                send_interrupt();
+  84   5                Time_in_state = 0;
+  85   5                //Current_State = AMBER;          
+  86   5              }
+  87   4          break;
+  88   4          }           
+  89   3          case GREEN:
+  90   3          {
+  91   4            DIO_SetPinDirection(PORT2,PIN0,OUTPUT);
+  92   4            DIO_SetPinDirection(PORT2,PIN1,OUTPUT);
+  93   4            DIO_SetPinDirection(PORT2,PIN2,INPUT);
+  94   4            if (++Time_in_state == GREEN_DURATION)
+  95   4              {
+  96   5                Current_State = AMBER;
+  97   5                send_interrupt();
+  98   5                Time_in_state = 0;
+  99   5                //Current_State = RED;
+ 100   5              }
+ 101   4          break;
+ 102   4          }
+ 103   3          case AMBER:
+ 104   3          {
+ 105   4            DIO_SetPinDirection(PORT2,PIN0,OUTPUT);
+ 106   4            DIO_SetPinDirection(PORT2,PIN1,INPUT);
+ 107   4            DIO_SetPinDirection(PORT2,PIN2,OUTPUT);
+ 108   4            if (++Time_in_state == AMBER_DURATION)
+ 109   4              {
+ 110   5                Current_State = RED;
+ 111   5                send_interrupt();
+ 112   5                Time_in_state = 0;
+ 113   5                //Current_State = RED_AND_AMBER;
+ 114   5              }
+ 115   4          break;
+ 116   4          }
+C51 COMPILER V9.60.7.0   MAIN                                                              12/03/2023 11:06:02 PAGE 3   
+
+ 117   3          default:{
+ 118   4            DIO_SetPinDirection(PORT2,PIN0,INPUT);
+ 119   4            DIO_SetPinDirection(PORT2,PIN1,INPUT);
+ 120   4            DIO_SetPinDirection(PORT2,PIN2,INPUT);
+ 121   4            break;
+ 122   4          }
+ 123   3           }
+ 124   2         }
+ 125   1        }
+ 126          void external0_isr() interrupt 0{
+ 127   1        disable_interrupts();
+ 128   1         turn_on = TRUE;
+ 129   1        enable_interrupts();
+ 130   1      }
+ 131          void external1_isr() interrupt 2{
+ 132   1        disable_interrupts();
+ 133   1         turn_on = FALSE;
+ 134   1        enable_interrupts();
+ 135   1      }
+ 136          void send_interrupt(){
+ 137   1        DIO_SetPinDirection(PORT2,PIN3,INPUT);
+ 138   1        delay_ms_timer0(50);
+ 139   1        DIO_SetPinDirection(PORT2,PIN3,OUTPUT);
+ 140   1      }
+ 141          /*
+ 142          seg_state 0 1 2 3
+ 143          seg_num initial at 3
+ 144          switch for seg_state then display seg_num
+ 145          then if one second ended! dicrement seg_num
+ 146          note:trans between state to another if seg_num =0
+ 147          */
+ 148          void timer1_isr() interrupt 3{
+ 149   1        TF1 = 0;
+ 150   1        if(turn_on == TRUE){
+ 151   2        switch(seg_state){
+ 152   3          case 0:
+ 153   3          {
+ 154   4            SEG_DisplayNumber(PORT1,segg_num);
+ 155   4            if(seg_flag == one_second){
+ 156   5              seg_flag = 0;
+ 157   5              if(segg_num == 0){
+ 158   6                segg_num = 3;
+ 159   6                seg_state = 1;}
+ 160   5              else{
+ 161   6                 segg_num--;
+ 162   6                 seg_state = 0;}} 
+ 163   4            else{
+ 164   5              seg_flag++;
+ 165   5              TH1 = 0x3C;   
+ 166   5              TL1 = 0xB0;}
+ 167   4           break;     
+ 168   4          }
+ 169   3          case 1:
+ 170   3            {
+ 171   4            SEG_DisplayNumber(PORT1,segg_num);
+ 172   4            if(seg_flag == one_second){
+ 173   5              seg_flag = 0;
+ 174   5              if(segg_num == 0){
+ 175   6                 seg_state = 2;
+ 176   6                 segg_num = 3;}
+ 177   5              else{
+ 178   6                 segg_num--;
+C51 COMPILER V9.60.7.0   MAIN                                                              12/03/2023 11:06:02 PAGE 4   
+
+ 179   6                 seg_state = 1;}
+ 180   5               }        
+ 181   4            else{
+ 182   5              seg_flag++;
+ 183   5              TH1 = 0x3C;   
+ 184   5              TL1 = 0xB0;}
+ 185   4           break;     
+ 186   4          }
+ 187   3          case 2:
+ 188   3            {
+ 189   4            SEG_DisplayNumber(PORT1,segg_num);
+ 190   4            if(seg_flag == one_second){
+ 191   5              seg_flag = 0;
+ 192   5              if(segg_num == 0){
+ 193   6                 seg_state = 0;
+ 194   6                 segg_num = 3;}
+ 195   5              else{
+ 196   6                 segg_num--;
+ 197   6                 seg_state = 2;}} 
+ 198   4            else{
+ 199   5              seg_flag++;
+ 200   5              TH1 = 0x3C;   
+ 201   5              TL1 = 0xB0;}  
+ 202   4           break;       
+ 203   4          }       
+ 204   3          }
+ 205   2        }
+ 206   1        }
+*** WARNING C316 IN LINE 206 OF main.c: unterminated conditionals
+*** WARNING C294 IN LINE 38 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    820    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)
